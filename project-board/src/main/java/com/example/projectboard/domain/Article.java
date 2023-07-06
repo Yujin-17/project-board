@@ -84,4 +84,5 @@ public class Article {
   }
 
   // 위의 equals 와 hashCode 메소드는 나중에 연관관계 매핑할 때, 거기서 사용하게 된다.
+  // 롬복을 이용시 이 내용을 간단하게 줄일 수 있다. @EqualsAndHashCode 하지만, 이렇게 구성되면 이 Entity 의 모든 필드를 모두 비교해서 표준적인 방법으로 구현하게된다.
 }
