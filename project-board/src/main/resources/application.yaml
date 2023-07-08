@@ -35,13 +35,13 @@ spring:
 
 --- # yaml 파일은 ---을 기준으로 여러개의 document 생성 가능, 각 document 마다 다른 profile 지정
 
-spring:
-  activate:
-      on-profile: testdb # testdb profile 이 activate 되어있을 때, 이 property 를 읽어라.
+#spring:
+#  activate:
+#      on-profile: testdb # testdb profile 이 activate 되어있을 때, 이 property 를 읽어라. 테스트가 실행될 때 이 DB 설정 실행.
 #  datasource: # 이 profile 사용시 datasource 로 이걸 사용하겠다.
 #    url: jdbc:h2:mem:board;mode=mysql
 #    driverClassName: org.h2.Driver
 #  sql:
 #    init:
 #      mode: always
-#  test.database.replace: none
+#  test.database.replace: none # @AutoConfigureTestDatabase(replace = Replace.NONE) 이 어노테이션을 여기서 이렇게 표현하면 전체적으로 적용된다.

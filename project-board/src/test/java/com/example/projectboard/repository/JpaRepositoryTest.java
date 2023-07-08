@@ -8,12 +8,14 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 @DisplayName("JPA 연결 테스트")
 @Import(JpaConfig.class) // test 클래스에는 JpaConfig가 있는지 확인을 못하기 때문에 import를 해줘야함.
-@DataJpaTest // 슬라이스 테스트
+@DataJpaTest // 슬라이스 테스트 / 모든 데이터베이스 설정을 무시하고, 테스트가 자기가 정해놓은 DB를 띄움.  -> 이걸 막기위해 @AutoConfigureTestDatabase(replace = Replace.NONE) 이 어노테이션 붙여주면 됨. 이걸 사용하면, 테스트 상태에서 돌려도 테스트 디비를 불러오지 않고 설정된걸 쓴다. -> 내가 설정한 mysql 환경으로 테스트도 가능하다는 뜻.
 class JpaRepositoryTest {
 
   @Autowired private ArticleRepository articleRepository; // @Autowired 를 사용해 필드를 주입.
