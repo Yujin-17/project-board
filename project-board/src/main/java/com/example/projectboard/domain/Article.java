@@ -1,13 +1,19 @@
 package com.example.projectboard.domain;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +22,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter // 모든 field 는 접근 가능해야한다. / @Setter 도 추가할 수 있지만, 여기서는 사용 안하는 방향으로 진행
 @ToString // 쉽게 출력 가능 -> 쉬운 관찰
@@ -25,6 +32,7 @@ import org.springframework.data.annotation.LastModifiedDate;
     @Index(columnList = "createdAt"),
     @Index(columnList = "createdBy")
 }) // index 생성 가능. @Index 어노테이션 사용해서 Indexing 가능. -> 검색기능을 위해.
+@EntityListeners(AuditingEntityListener.class) // 이게 있어야 Auditing 동작
 @Entity
 public class Article {
 
@@ -43,6 +51,11 @@ public class Article {
         그리고 밑의 메타데이터도 자동으로 JPA 가 만들어주기 때문에 @Setter를 열어두게 된다면, 내가 임의로 값을 수정할 수 있다. 이걸 방지하기 위해 각각의 필드에 @Setter를 붙였다.
      물론 코드 스타일마다 다르다!
   */
+
+  // 양방향 데이터 매핑, 공부 목적으로 양방향 매핑을 했지만, 실무에서는 이를 안쓰는 경우가 많다. 왜냐면 cascading 에 의해 서로가 강하게 결합되어있는데, 데이터 마이그레이션이나 편집시 불편함이 따르고, 원치않는 데이터 손실이 일어날 수 있다.
+  @OrderBy("id") // 정렬
+  @OneToMany(mappedBy = "article", cascade = CascadeType.ALL) // 이렇게 이름 설정을 하지 않으면, 이름 설정을 따로 하는데 아티블_아티클 코멘트 이런식으로 해서 새 테이블을 새로 만든다. 이걸 원치 않아 mappedBy 로  article 테이블에서 온 것이라고 명시.
+  private final Set<ArticleComment> articleComments = new LinkedHashSet<>(); // 한번만 세팅할거라 final 사용, 이 Article 에 연동된 Comment 는 중복을 허용하지 않고, 모아서 컬렉션으로 뿌린다.
 
   // 메타데이터 / Jpa Auditing 을 사용해서 자동으로 데이터 삽입
   @CreatedDate @Column(nullable = false) private LocalDateTime createdAt; // 생성일시

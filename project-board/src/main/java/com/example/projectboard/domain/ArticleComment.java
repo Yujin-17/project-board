@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +20,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Getter // 모든 field 는 접근 가능해야한다. / @Setter 도 추가할 수 있지만, 여기서는 사용 안하는 방향으로 진행
@@ -28,6 +30,7 @@ import org.springframework.data.annotation.LastModifiedDate;
     @Index(columnList = "createdAt"),
     @Index(columnList = "createdBy")
 }) // index 생성 가능. @Index 어노테이션 사용해서 Indexing 가능. -> 검색기능을 위해.
+@EntityListeners(AuditingEntityListener.class) // 이게 있어야 Auditing 동작
 @Entity
 public class ArticleComment {
 
